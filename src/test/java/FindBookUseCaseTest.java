@@ -138,6 +138,17 @@ public class FindBookUseCaseTest {
         verify(bookDAO).findOne(id);
     }
 
+    @Test
+    @DisplayName("should return empty when no book is found for isbn")
+    void shouldNotReturnABookWithIsbnNotFound(){
+        when(bookDAO.findByIsnb("123456789")).thenReturn(Optional.empty());
+
+        String isbn = "123456789";
+        Optional<Book> result = sut.findOneByIsbn(isbn);
+        assertThat(result).isEmpty();
+        verify(bookDAO).findByIsnb(isbn);
+    }
+
     @ParameterizedTest()
     @NullAndEmptySource
     @ValueSource(strings = " ")
