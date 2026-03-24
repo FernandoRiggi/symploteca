@@ -99,6 +99,35 @@ public class FindBookUseCaseTest {
         verify(bookDAO).findOne(id);
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "1, Clean Architecture, 9780134494166",
+            "2, Clean Code, 9780132350884"
+    })
+    @DisplayName("should return a boook if isbn is valid")
+    void shouldReturnABookIfIsbnIsValid(int id, String name, String isbn) {
+        Book expectedBook = new Book(
+                id,
+                1,
+                0,
+                name,
+                "Robert C. Martin",
+                "Prentice Hall",
+                isbn,
+                BookGender.TECHNICAL,
+                BookStatus.AVAILABLE
+        );
+
+        when(bookDAO.findByIsnb(isbn)).thenReturn(Optional.of(expectedBook));
+
+        Optional<Book> result = sut.findOneByIsbn(isbn);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get().getId()).isEqualTo(id);
+        verify(bookDAO).findByIsnb(isbn);
+    }
+
     @Test
     @DisplayName("should return empty when no book is found for id")
     void shouldNotReturnABook(){
