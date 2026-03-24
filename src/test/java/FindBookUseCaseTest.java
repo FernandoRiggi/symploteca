@@ -32,7 +32,7 @@ public class FindBookUseCaseTest {
     private BookDAO bookDAO;
 
     @InjectMocks
-    FindBookUseCase sut;
+    private FindBookUseCase sut;
 
     @Test()
     @DisplayName("should throw Illegal Argument Exception when id is null")
@@ -104,7 +104,7 @@ public class FindBookUseCaseTest {
             "1, Clean Architecture, 9780134494166",
             "2, Clean Code, 9780132350884"
     })
-    @DisplayName("should return a boook if isbn is valid")
+    @DisplayName("should return a book if isbn is valid")
     void shouldReturnABookIfIsbnIsValid(int id, String name, String isbn) {
         Book expectedBook = new Book(
                 id,
@@ -152,14 +152,14 @@ public class FindBookUseCaseTest {
     @ParameterizedTest()
     @NullAndEmptySource
     @ValueSource(strings = " ")
-    @DisplayName("should throw Illegal Argument Exception when Isbn is null")
-    void shouldThrowIllegalArgumentExceptionWhenIdIsbnIsNull(String isbn) {
+    @DisplayName("should throw Illegal Argument Exception when Isbn is null, empty or blank")
+    void shouldThrowIllegalArgumentExceptionWhenIsbnIsNullEmptyOrBlank(String isbn) {
         assertThatIllegalArgumentException().isThrownBy(() -> sut.findOneByIsbn(isbn));
         verifyNoInteractions(bookDAO);
     }
 
     @Test
-    @DisplayName("Should return all book")
+    @DisplayName("should return all books")
     void shouldReturnAllBooks(){
         when(bookDAO.findAll()).thenReturn(books);
 
